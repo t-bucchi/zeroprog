@@ -298,8 +298,8 @@ static void backup_eeprom(char *filename) {
 		exit(1);
 	}
 	for (unsigned int i=0; i < sizeof(eep)/sizeof(eep[0]); i++) {
-		fputc(eep[i]>>8, fp);
 		fputc(eep[i] & 0xFF, fp);
+		fputc(eep[i] >> 8, fp);
 	}
 	fclose(fp);
 	exit(0);
