@@ -214,6 +214,15 @@ int gl_read_eeprom(unsigned short *eep) {
 	return 0;
 }
 
+int gl_write_eeprom(unsigned short *eep) {
+	eep_send_ewen();
+	for(int i = 0; i < 64; i++) {
+		eep_write_word(i, eep[i]);
+	}
+	eep_send_ewds();
+	return 0;
+}
+
 static void write_vid_pid(unsigned short vid, unsigned short pid) {
 	unsigned short checksum = 0xFF00 | ((vid >> 8) + (vid & 0xFF) + (pid >> 8) + (pid & 0xFF) + 1);
 	eep_send_ewen();
@@ -312,8 +321,26 @@ static void restore_eeprom(char *filename) {
 		perror("Unable to open input file: ");
 		exit(1);
 	}
+
+	unsigned int i;
+	for (i = 0; i < sizeof(eep) / sizeof(eep[0]); i++) {
+		int v1, v2;
+		if ((v1 = fgetc(fp)) == EOF)
+			break;
+		if ((v2 = fgetc(fp)) == EOF)
+			break;
+
+		eep[i] = v1 | (v2 << 8);
+	}
+	if (fgetc(fp) != EOF)
+		i = -1;
 	fclose(fp);
-	printf("// not yet implemented, sorry\n");
+
+	if (i != sizeof(eep) / sizeof(eep[0])) {
+		printf("Illegal file size\n");
+	}
+
+	gl_write_eeprom(eep);
 }
 
 
