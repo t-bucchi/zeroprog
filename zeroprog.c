@@ -1,5 +1,6 @@
 /*
  Copyright (c) 2010 Haxx Enterprises <bushing@gmail.com>
+ Copyright (c) 2014 Tomohiro Masubuchi <bucchi79@gmail.com>
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or
